@@ -33,8 +33,7 @@ html{
 .append{
     position: absolute;
     font-size:1em;
-    top:9em;
-    left:25em;
+    padding:1em;
     width: 13em;
     height:2em; 
     z-index: 10;
@@ -51,7 +50,7 @@ html{
     grid-template-columns: repeat(4,1fr);
     grid-template-rows: repeat(5,1fr);
     background-color: var(--primary-text-color);
-    color:var(--primary-text-color);
+    color : var(--primary-text-color);
 }
 
 .area{
@@ -62,7 +61,7 @@ html{
     background-color: var(--accent-color);
     font-size:1.3em;
     font-weight: bold;
-    border-radius:15px;
+    border-radius:10px;
 }
 
 .area:hover{
