@@ -76,7 +76,7 @@ function doCalculation(e) {
 
     let key = e.target.classList;                                                          // Note '= operator' does not have a class of operator , bcz we evaluate on = and count becomes 0, else errors arise
     let value = Array.from(key).includes('operator') ? true : false;                      //count = 0 -> No operator (5)   
-    console.log(`Value : ${value}, Proceed ${proceed}`)
+    // console.log(`Value : ${value}, Proceed ${proceed}`)
 
 
     // Checks if last key was an operator or not, if repeated operators : dont run evaluation.
@@ -106,7 +106,7 @@ function doCalculation(e) {
 
 
 function calculate(expression) {
-    // console.log(`Expression : ${expression}`)
+    console.log(`Expression : ${expression}`)
 
     // Odd Cases
     let divideByZero = expression.match(/\/0/g);
@@ -115,8 +115,8 @@ function calculate(expression) {
     if (divideByZero) { return 'LoL';}
     if (zeroBySomething) {return '0';}
 
-    let operator = expression.match(/[+\-X/]/g)[0];               //Finds the operand
-    let operands = expression.split(/[+\-X/]/g);                  //Splits on operand
+    let operator = expression.match(/[+\-*/]/g)[0] ?? 0;               //Finds the operand
+    let operands = expression.split(/[+\-*/]/g);                  //Splits on operand
     
     // console.log(`Operator : ${operands}, Operands : ${operator}`);
 
@@ -125,7 +125,7 @@ function calculate(expression) {
 
     if (operator == '+') { return a + b }
     else if (operator == '-') { return a - b }
-    else if (operator == 'X') { return a * b }
+    else if (operator == '*') { return a * b }
     else { return (a / b).toFixed(2) };
 
 }

@@ -1,3 +1,4 @@
+// No eval Function Used, String Manipulation, Control Flow Understanding
 
 // Result Area and key selectors
 [resultArea, ...allKeys] = document.querySelectorAll('.area');
@@ -5,22 +6,32 @@ log = document.querySelector('.append');
 // console.log(resultArea, allKeys);
 
 //Event Listeners - for any key pressed
-allKeys.forEach(element => element.addEventListener('click', operate));
+// page = document.querySelector('body').addEventListener('keydown', search);  //->Typing
+allKeys.forEach(element => element.addEventListener('click', operate));     //->Clicking
 
+var operatorCount = 0;                                                      //No operator (99 -> typed in keypad)
+var proceed = [true];                                                       //Used to confirm if operators are chained or not. Eg (5+-)
 
-var operatorCount = 0;                             //No operator (99 -> typed in keypad)
-var proceed = [true];                              //Used to confirm if operators are chained or not. Eg (5+-)
+// function search(e){
+//     key = e.key;
+//     let value;
+//     if (key == 'Enter'){value = key;}
+//     else if (key=='Backspace'){value=key}
+//     else if (key =='Enter'){cleanArea()} 
+//     else if(key.match(/[\d+\-*=/]/g)){value = key}              
+//     operate(false, value)
+// }
 
-
-function operate(e) {
+function operate(e,typed) {
     if (resultArea.textContent.length>26){
-        resultArea.textContent = '';               //Prevent overfill
+        resultArea.textContent = '';                     //Prevent overfill
     }
 
-    let keyPressed = e.target.textContent;         //Value inside pressed key eg - 9,8,C,0,-,1
-    showCalculation(keyPressed, false);            //Shows live calculation in the result Area
-    doCalculation(e);                              // Recognizes when to do calculation and calculates, for us it is when operator count reaches 2.Eg (5+9+)
-    operationLogging(keyPressed)
+    // pressed = typed ?? e.target.textContent;             //Value inside typed/pressed key eg - 9,8,C,0,-,1
+    pressed = e.target.textContent;
+    showCalculation(pressed, false);                     //Shows live calculation in the result Area
+    doCalculation(e)                //count = 0 -> No operator (5)                                     // Recognizes when to do calculation and calculates, for us it is when operator count reaches 2.Eg (5+9+)
+    operationLogging(pressed)
     // console.log(e);
 }
 
@@ -34,11 +45,10 @@ function appendResult(text){
     answer =  `${text}${lastOperator}`;
     resultArea.textContent = answer;
     operatorCount = 1;                                       // 1 operator present (14+)
-    // log.textContent+=answer;
 }
 
 function operationLogging(text){
-    if (log.textContent.length>20){log.textContent = '' };   //Clear Log when reaches 20 words limit and and operator is used.
+    if (log.textContent.length>15){log.textContent = '' };   //Clear Log when reaches 20 words limit and and operator is used.
     if (text =='C') {log.textContent = ''}
     else if(text == '@'){log.textContent= log.textContent.slice(0,-1)}
     else{log.textContent+=text};
@@ -48,7 +58,7 @@ function showCalculation(text) {
     //Function of showCalculation is to show a pair of operands and an operator ( x + y ) or result (z) or clear ('')
     // console.log(resultArea.textContent)
 
-    if (text == '@') {                                                                       //Deletes: Last pressed key  = Backspace     
+    if (text == '@' || text == 'Backspace') {                                                                       //Deletes: Last pressed key  = Backspace     
         lastKey = resultArea.textContent.slice(-1);
         if (!(lastKey.match(/\d/g))) {
             operatorCount--;                                                                //If last pressed key was an operator, reduce operatorCount by 1.
@@ -57,8 +67,8 @@ function showCalculation(text) {
         resultArea.textContent = resultArea.textContent.slice(0, -1);                       
     }
 
-    else if (text == 'C') { cleanArea()}                                                                                         //Clears: Area 
-    else if (text == '=') {
+    else if (text == 'c') { cleanArea()}                                                                                         //Clears: Area 
+    else if (text == '=' || text == 'Enter') {
         operatorCount = 0;
         resultArea.textContent = calculate(resultArea.textContent);
     }
@@ -77,7 +87,7 @@ function doCalculation(e) {
 
     let key = e.target.classList;                                                          // Note '= operator' does not have a class of operator , bcz we evaluate on = and count becomes 0, else errors arise
     let value = Array.from(key).includes('operator') ? true : false;                      //count = 0 -> No operator (5)   
-    console.log(`Value : ${value}, Proceed ${proceed}`)
+    // console.log(`Value : ${value}, Proceed ${proceed}`)
 
 
     // Checks if last key was an operator or not, if repeated operators : dont run evaluation.
@@ -116,8 +126,8 @@ function calculate(expression) {
     if (divideByZero) { return 'LoL';}
     if (zeroBySomething) {return '0';}
 
-    let operator = expression.match(/[+\-X/]/g)[0];               //Finds the operand
-    let operands = expression.split(/[+\-X/]/g);                  //Splits on operand
+    let operator = expression.match(/[+\-*/]/g)[0];               //Finds the operand
+    let operands = expression.split(/[+\-*/]/g);                  //Splits on operand
     
     // console.log(`Operator : ${operands}, Operands : ${operator}`);
 
@@ -126,8 +136,7 @@ function calculate(expression) {
 
     if (operator == '+') { return a + b }
     else if (operator == '-') { return a - b }
-    else if (operator == 'X') { return a * b }
+    else if (operator == '*') { return a * b }
     else { return (a / b).toFixed(2) };
 
 }
-
