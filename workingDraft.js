@@ -1,4 +1,3 @@
-
 // Result Area and key selectors
 [resultArea, ...allKeys] = document.querySelectorAll('.area');
 log = document.querySelector('.append');
